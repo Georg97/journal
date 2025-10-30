@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DIY A5 Journal - Title Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,7 +13,7 @@
         }
 
         body {
-            font-family: 'Georgia', serif;
+            font-family: 'Spectral', serif;
             background-color: #f5f5f5;
             padding: 0;
         }
@@ -90,23 +91,26 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             text-align: center;
-            gap: 20mm;
+            height: 100%;
         }
 
         .cover-title {
-            font-size: 24pt;
-            font-weight: bold;
+            font-size: 32pt;
+            font-weight: 700;
             color: #333;
             margin-bottom: 10mm;
+            letter-spacing: 2px;
         }
 
         .cover-subtitle {
-            font-size: 12pt;
-            color: #666;
-            font-style: italic;
+            font-size: 13pt;
+            color: #888;
+            font-weight: 400;
             margin-bottom: 20mm;
+            font-style: normal;
+            letter-spacing: 1px;
         }
 
         .cover-decoration {
@@ -116,73 +120,118 @@
             margin: 15mm 0;
         }
 
-        .cover-footer {
-            font-size: 10pt;
-            color: #999;
+        .cover-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12mm;
             margin-top: auto;
             padding-top: 20mm;
         }
 
-        /* Back cover styling */
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3mm;
+        }
+
+        .detail-label {
+            font-size: 9pt;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-line {
+            border-bottom: 1px solid #333;
+            padding-bottom: 2mm;
+            font-size: 11pt;
+            color: #333;
+            min-height: 5mm;
+        }
+
+        .cover-footer {
+            font-size: 9pt;
+            color: #999;
+            margin-top: 12mm;
+            text-align: center;
+        }
+
+        /* Back cover styling - Summary page */
         .back-cover {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             height: 100%;
         }
 
         .back-header {
             text-align: center;
-            margin-bottom: 15mm;
+            margin-bottom: 12mm;
         }
 
         .back-header-title {
-            font-size: 14pt;
-            font-weight: bold;
+            font-size: 18pt;
+            font-weight: 700;
             color: #333;
-            margin-bottom: 5mm;
+            margin-bottom: 3mm;
+            letter-spacing: 1px;
         }
 
         .back-header-subtitle {
             font-size: 9pt;
-            color: #666;
+            color: #888;
+            font-weight: 400;
         }
 
         .back-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 8mm;
         }
 
         .back-section {
-            padding-bottom: 8mm;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 10mm;
         }
 
         .back-section:last-of-type {
-            border-bottom: none;
-            flex-shrink: 0;
+            margin-bottom: 0;
         }
 
         .back-section-title {
-            font-size: 10pt;
-            font-weight: bold;
+            font-size: 11pt;
+            font-weight: 600;
             color: #333;
-            margin-bottom: 3mm;
+            margin-bottom: 5mm;
         }
 
         .back-section-text {
-            font-size: 8pt;
+            font-size: 9pt;
             color: #666;
-            line-height: 1.4;
+            line-height: 1.5;
+            margin-bottom: 3mm;
+        }
+
+        .writing-space {
+            flex: 1;
+            border: none;
+            background-image: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 12px,
+                #f0f0f0 12px,
+                #f0f0f0 13px
+            );
+            background-position: 0 0;
+            background-size: 100% 13px;
+            min-height: 40mm;
         }
 
         .back-footer {
             text-align: center;
             font-size: 8pt;
             color: #999;
-            padding-top: 10mm;
+            padding-top: 8mm;
+            margin-top: 8mm;
             border-top: 1px solid #ddd;
         }
 
@@ -211,44 +260,41 @@
         <!-- Front Cover (Top-Left A5 Page) -->
         <div class="a5-page left">
             <div class="cover">
-                <div style="flex: 1;"></div>
                 <div>
-                    <div class="cover-title">My Journal</div>
+                    <div class="cover-title">Journal</div>
                     <div class="cover-decoration"></div>
-                    <div class="cover-subtitle">A Space for Daily Reflection</div>
                 </div>
-                <div style="flex: 1;"></div>
+                <div class="cover-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Journal Name</div>
+                        <div class="detail-line"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">From — To</div>
+                        <div class="detail-line"></div>
+                    </div>
+                </div>
                 <div class="cover-footer">Begin whenever you're ready</div>
             </div>
         </div>
 
-        <!-- Back Cover (Top-Right A5 Page) -->
+        <!-- Summary Page (Top-Right A5 Page) -->
         <div class="a5-page right">
             <div class="back-cover">
                 <div class="back-header">
-                    <div class="back-header-title">About This Journal</div>
-                    <div class="back-header-subtitle">6 Points for Daily Reflection</div>
+                    <div class="back-header-title">What I Learned</div>
+                    <div class="back-header-subtitle">A Summary of My Journey</div>
                 </div>
 
                 <div class="back-content">
                     <div class="back-section">
-                        <div class="back-section-title">How to Use</div>
-                        <div class="back-section-text">Each page contains 6 points for you to reflect on. Take time each day to write your thoughts, feelings, or observations for each topic.</div>
-                    </div>
-
-                    <div class="back-section">
-                        <div class="back-section-title">Punkt 1-6</div>
-                        <div class="back-section-text">Use these sections to explore different aspects of your day. There are no rules—write what matters to you.</div>
-                    </div>
-
-                    <div class="back-section">
-                        <div class="back-section-title">Assembly Instructions</div>
-                        <div class="back-section-text">Cut pages horizontally and stack them together. This creates a small A5 journal you can carry with you.</div>
+                        <div class="back-section-title">Key Insights</div>
+                        <div class="writing-space"></div>
                     </div>
                 </div>
 
                 <div class="back-footer">
-                    Handmade with care • Begin your journey today
+                    Reflect and grow
                 </div>
             </div>
         </div>
