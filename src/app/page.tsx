@@ -5,9 +5,11 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '~/components/LanguageSwitcher';
 
-export const dynamic = 'force-dynamic';
+interface HomePageProps {
+  isBeta?: boolean;
+}
 
-export default function HomePage() {
+function HomePageClient({ isBeta = false }: HomePageProps) {
   const { t } = useTranslation();
   const [isClient, setIsClient] = useState(false);
 
@@ -25,9 +27,9 @@ export default function HomePage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white">
+    <main className={`flex min-h-screen flex-col bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white ${isBeta ? 'pt-12' : ''}`}>
       {/* Language Switcher */}
-      <div className="absolute top-4 right-4 z-10">
+      <div className={`absolute right-4 z-10 ${isBeta ? 'top-16' : 'top-4'}`}>
         <LanguageSwitcher />
       </div>
 
@@ -190,4 +192,14 @@ export default function HomePage() {
       </footer>
     </main>
   );
+}
+
+// Server component wrapper
+import { isBetaDeployment } from '~/lib/deployment';
+
+export const dynamic = 'force-dynamic';
+
+export default function HomePage() {
+  const isBeta = isBetaDeployment();
+  return <HomePageClient isBeta={isBeta} />;
 }

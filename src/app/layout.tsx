@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 import { I18nProvider } from "~/components/I18nProvider";
+import { BetaBanner } from "~/components/BetaBanner";
 
 export const metadata: Metadata = {
   title: "Winter Arc Journal",
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable}`}>
       <body>
+        <BetaBanner />
         <I18nProvider>{children}</I18nProvider>
       </body>
     </html>

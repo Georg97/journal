@@ -7,9 +7,11 @@ import { A5JournalPage } from '~/components/A5JournalPage';
 import { A5BackCover, A5FrontCover, A5TitleJournalPage } from '~/components/A5TitlePages';
 import { LanguageSwitcher } from '~/components/LanguageSwitcher';
 
-export const dynamic = 'force-dynamic';
+interface JournalPageProps {
+  isBeta?: boolean;
+}
 
-export default function JournalPageRoute() {
+function JournalPageClient({ isBeta = false }: JournalPageProps) {
   const { i18n, t, ready } = useTranslation();
   const [isClient, setIsClient] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -153,7 +155,7 @@ export default function JournalPageRoute() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-gray-800 text-white rounded-lg shadow-lg print:hidden"
+        className={`lg:hidden fixed left-4 z-[110] p-2 bg-gray-800 text-white rounded-lg shadow-lg print:hidden ${isBeta ? 'top-16' : 'top-4'}`}
         aria-label="Toggle menu"
       >
         <svg
@@ -182,9 +184,9 @@ export default function JournalPageRoute() {
       )}
 
       {/* Sidebar */}
-      <div className={`w-80 bg-gray-800 text-white p-6 print:hidden overflow-y-auto fixed left-0 top-0 bottom-0 shadow-xl z-40 transition-transform duration-300 ease-in-out ${
+      <div className={`w-80 bg-gray-800 text-white p-6 print:hidden overflow-y-auto fixed left-0 bottom-0 shadow-xl z-40 transition-transform duration-300 ease-in-out ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      } lg:translate-x-0`}>
+      } lg:translate-x-0 ${isBeta ? 'top-12' : 'top-0'}`}>
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-2xl font-bold">{t('journal.settings.title')}</h2>
@@ -477,4 +479,14 @@ export default function JournalPageRoute() {
       </div>
     </main>
   );
+}
+
+// Server component wrapper
+import { isBetaDeployment } from '~/lib/deployment';
+
+export const dynamic = 'force-dynamic';
+
+export default function JournalPageRoute() {
+  const isBeta = isBetaDeployment();
+  return <JournalPageClient isBeta={isBeta} />;
 }
