@@ -311,32 +311,34 @@ export default function JournalPageRoute() {
       {/* Main Content Area */}
       <div className="flex-1 ml-80 print:ml-0">
         {/* Title page - A4 sheet with 4 A5 sections */}
-        <div className="w-[210mm] h-[297mm] mx-auto my-[10mm] bg-white grid grid-cols-2 grid-rows-2 gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:m-0 print:shadow-none page-container">
-          {/* Top-Left: Back Cover / Summary */}
-          <div className="border-r-2 border-b-2 border-dashed border-gray-500 print:border-none">
-            <A5BackCover />
+        {totalDays > 0 && (
+          <div className="w-[210mm] h-[297mm] mx-auto my-[10mm] bg-white grid grid-cols-2 grid-rows-2 gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:m-0 print:shadow-none page-container">
+            {/* Top-Left: Back Cover / Summary */}
+            <div className="border-r-2 border-b-2 border-dashed border-gray-500 print:border-none">
+              <A5BackCover />
+            </div>
+            {/* Top-Right: Front Cover */}
+            <div className="border-b-2 border-dashed border-gray-500 print:border-none">
+              <A5FrontCover />
+            </div>
+            {/* Bottom-Left: First Journal Page (only if we have at least 1 day) */}
+            <div className="border-r-2 border-dashed border-gray-500 print:border-none">
+              {titleA5Dates[0] ? (
+                <A5TitleJournalPage date={titleA5Dates[0]} locale={locale} />
+              ) : (
+                <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
+              )}
+            </div>
+            {/* Bottom-Right: Second Journal Page (only if we have at least 2 days) */}
+            <div className="print:border-none">
+              {titleA5Dates[1] ? (
+                <A5TitleJournalPage date={titleA5Dates[1]} locale={locale} />
+              ) : (
+                <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
+              )}
+            </div>
           </div>
-          {/* Top-Right: Front Cover */}
-          <div className="border-b-2 border-dashed border-gray-500 print:border-none">
-            <A5FrontCover />
-          </div>
-          {/* Bottom-Left: First Journal Page */}
-          <div className="border-r-2 border-dashed border-gray-500 print:border-none">
-            {titleA5Dates[0] ? (
-              <A5TitleJournalPage date={titleA5Dates[0]} locale={locale} />
-            ) : (
-              <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
-            )}
-          </div>
-          {/* Bottom-Right: Second Journal Page */}
-          <div className="print:border-none">
-            {titleA5Dates[1] ? (
-              <A5TitleJournalPage date={titleA5Dates[1]} locale={locale} />
-            ) : (
-              <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
-            )}
-          </div>
-        </div>
+        )}
 
         {/* Then all journal A4 sheets */}
         {journalA4Sheets.map((a4Sheet, sheetIndex) => (
