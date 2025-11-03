@@ -1,0 +1,93 @@
+{
+  "landing": {
+    "hero": {
+      "title": "Create Your Own",
+      "titleHighlight": "Printable Journal",
+      "subtitle": "Design beautiful, personalized journal pages in A5 format. Print on A4 paper, cut horizontally, and bind them into your perfect custom journal.",
+      "description": "Customize categories, set date ranges, and generate the exact number of pages you need.",
+      "startNow": "🚀 Start Now"
+    },
+    "features": {
+      "customizable": {
+        "title": "Fully Customizable",
+        "description": "Edit categories, choose locale, and personalize your journal to match your needs."
+      },
+      "dateBased": {
+        "title": "Date-Based Generation",
+        "description": "Set start and end dates to automatically generate the perfect number of journal pages."
+      },
+      "printReady": {
+        "title": "Print Ready",
+        "description": "Export to PDF and print on standard A4 paper. No waste, no hassle."
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Get started in just a few simple steps",
+      "step1": {
+        "title": "Customize Your Categories",
+        "description": "Click \"Edit Categories\" to personalize the tracking categories for your journal. Add, remove, or modify up to 10 categories that matter to you."
+      },
+      "step2": {
+        "title": "Choose Your Date Range",
+        "description": "Enable \"Use Date Range\" to set start and end dates, or disable it to manually enter the number of days you need."
+      },
+      "step3": {
+        "title": "Preview Your Journal",
+        "description": "See your custom journal pages with your categories, dates, and layout in real-time. Each page includes space for daily tracking and reflection."
+      },
+      "step4": {
+        "title": "Print & Assemble",
+        "description": "Click \"Print / Save as PDF\" to generate your journal. Print on A4 paper, cut horizontally to create A5 pages, and bind them together."
+      },
+      "step4Alt": "Your custom journal is ready to print!",
+      "cta": "Create Your Journal Now"
+    },
+    "footer": {
+      "builtWith": "Built with",
+      "tagline": "Design your journal, print it, and start journaling today."
+    }
+  },
+  "journal": {
+    "settings": {
+      "title": "Journal Settings",
+      "backToHome": "← Back to Home",
+      "print": "🖨️ Print / Save as PDF",
+      "editCategories": "✏️ Edit Categories",
+      "useDateRange": "Use Date Range",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "dateFormat": "Date Format",
+      "numberOfDays": "Number of Days",
+      "daysInfo": "days",
+      "pagesInfo": "pages",
+      "categories": {
+        "title": "Categories (Max 10)",
+        "addCategory": "+ Add Category",
+        "total": "Total:",
+        "placeholder": "Category"
+      }
+    },
+    "dateFormats": {
+      "de": "🇩🇪 German",
+      "en-US": "🇺🇸 English (US)",
+      "en-GB": "🇬🇧 English (UK)",
+      "fr": "🇫🇷 French",
+      "es": "🇪🇸 Spanish",
+      "it": "🇮🇹 Italian"
+    },
+    "titlePage": {
+      "whatILearned": "What I Learned",
+      "summary": "A Summary of My Journey",
+      "keyInsights": "Key Insights",
+      "reflectAndGrow": "Reflect and grow",
+      "journalTitle": "Journal",
+      "journalName": "Journal Name",
+      "dateRange": "From — To",
+      "beginReady": "Begin whenever you're ready"
+    }
+  },
+  "common": {
+    "language": "Language"
+  }
+}

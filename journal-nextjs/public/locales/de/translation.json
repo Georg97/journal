@@ -1,0 +1,93 @@
+{
+  "landing": {
+    "hero": {
+      "title": "Erstelle Dein Eigenes",
+      "titleHighlight": "Druckbares Journal",
+      "subtitle": "Gestalte wunderschöne, personalisierte Journalseiten im A5-Format. Drucke auf A4-Papier, schneide horizontal und binde sie zu Deinem perfekten individuellen Journal.",
+      "description": "Passe Kategorien an, setze Datumsbereiche und generiere genau die Anzahl an Seiten, die Du benötigst.",
+      "startNow": "🚀 Jetzt Starten"
+    },
+    "features": {
+      "customizable": {
+        "title": "Vollständig Anpassbar",
+        "description": "Bearbeite Kategorien, wähle das Gebietsschema und personalisiere Dein Journal nach Deinen Bedürfnissen."
+      },
+      "dateBased": {
+        "title": "Datumsbasierte Generierung",
+        "description": "Setze Start- und Enddatum, um automatisch die perfekte Anzahl an Journalseiten zu generieren."
+      },
+      "printReady": {
+        "title": "Druckbereit",
+        "description": "Exportiere als PDF und drucke auf Standard-A4-Papier. Keine Verschwendung, kein Aufwand."
+      }
+    },
+    "howItWorks": {
+      "title": "So Funktioniert's",
+      "subtitle": "Starte in wenigen einfachen Schritten",
+      "step1": {
+        "title": "Kategorien Anpassen",
+        "description": "Klicke auf \"Kategorien Bearbeiten\", um die Tracking-Kategorien für Dein Journal zu personalisieren. Füge hinzu, entferne oder ändere bis zu 10 Kategorien, die Dir wichtig sind."
+      },
+      "step2": {
+        "title": "Datumsbereich Wählen",
+        "description": "Aktiviere \"Datumsbereich Verwenden\", um Start- und Enddatum festzulegen, oder deaktiviere es, um die Anzahl der benötigten Tage manuell einzugeben."
+      },
+      "step3": {
+        "title": "Journal Vorschau",
+        "description": "Sieh Deine individuellen Journalseiten mit Deinen Kategorien, Daten und Layout in Echtzeit. Jede Seite enthält Platz für tägliches Tracking und Reflexion."
+      },
+      "step4": {
+        "title": "Drucken & Zusammenstellen",
+        "description": "Klicke auf \"Drucken / Als PDF Speichern\", um Dein Journal zu generieren. Drucke auf A4-Papier, schneide horizontal, um A5-Seiten zu erstellen, und binde sie zusammen."
+      },
+      "step4Alt": "Dein individuelles Journal ist bereit zum Drucken!",
+      "cta": "Erstelle Jetzt Dein Journal"
+    },
+    "footer": {
+      "builtWith": "Erstellt mit",
+      "tagline": "Gestalte Dein Journal, drucke es und beginne heute mit dem Journaling."
+    }
+  },
+  "journal": {
+    "settings": {
+      "title": "Journal Einstellungen",
+      "backToHome": "← Zurück zur Startseite",
+      "print": "🖨️ Drucken / Als PDF Speichern",
+      "editCategories": "✏️ Kategorien Bearbeiten",
+      "useDateRange": "Datumsbereich Verwenden",
+      "startDate": "Startdatum",
+      "endDate": "Enddatum",
+      "dateFormat": "Datumsformat",
+      "numberOfDays": "Anzahl der Tage",
+      "daysInfo": "Tage",
+      "pagesInfo": "Seiten",
+      "categories": {
+        "title": "Kategorien (Max 10)",
+        "addCategory": "+ Kategorie Hinzufügen",
+        "total": "Gesamt:",
+        "placeholder": "Kategorie"
+      }
+    },
+    "dateFormats": {
+      "de": "🇩🇪 Deutsch",
+      "en-US": "🇺🇸 Englisch (US)",
+      "en-GB": "🇬🇧 Englisch (UK)",
+      "fr": "🇫🇷 Französisch",
+      "es": "🇪🇸 Spanisch",
+      "it": "🇮🇹 Italienisch"
+    },
+    "titlePage": {
+      "whatILearned": "Was Ich Gelernt Habe",
+      "summary": "Eine Zusammenfassung Meiner Reise",
+      "keyInsights": "Wichtige Erkenntnisse",
+      "reflectAndGrow": "Reflektieren und Wachsen",
+      "journalTitle": "Journal",
+      "journalName": "Journalname",
+      "dateRange": "Von — Bis",
+      "beginReady": "Beginne, wann immer Du bereit bist"
+    }
+  },
+  "common": {
+    "language": "Sprache"
+  }
+}
