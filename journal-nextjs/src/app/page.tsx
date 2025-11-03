@@ -10,6 +10,14 @@ export default function HomePage() {
   const [numPages, setNumPages] = useState<number>(5);
   const [inputValue, setInputValue] = useState<string>('5');
 
+  // Calculate total days: Title page has 2 journal sections (bottom left & bottom right)
+  // Each additional journal page has 4 sections (2x2 grid)
+  const calculateDays = (pages: number) => {
+    const titlePageDays = 2; // Title page has 2 journal sections at the bottom
+    const additionalDays = pages * 4; // Each journal page has 4 A5 sections
+    return titlePageDays + additionalDays;
+  };
+
   if (view === 'title') {
     return (
       <main className="min-h-screen bg-gray-100">
@@ -54,13 +62,13 @@ export default function HomePage() {
             <label className="text-gray-800 font-medium">Journal Pages:</label>
             <input
               type="number"
-              min="1"
+              min="0"
               max="100"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onBlur={() => {
                 const value = parseInt(inputValue);
-                if (!isNaN(value) && value >= 1 && value <= 100) {
+                if (!isNaN(value) && value >= 0 && value <= 100) {
                   setNumPages(value);
                 } else {
                   setInputValue(numPages.toString());
@@ -69,7 +77,7 @@ export default function HomePage() {
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   const value = parseInt(inputValue);
-                  if (!isNaN(value) && value >= 1 && value <= 100) {
+                  if (!isNaN(value) && value >= 0 && value <= 100) {
                     setNumPages(value);
                   } else {
                     setInputValue(numPages.toString());
@@ -78,7 +86,9 @@ export default function HomePage() {
               }}
               className="w-20 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <span className="text-gray-600 text-sm">(Title + {numPages} page{numPages !== 1 ? 's' : ''})</span>
+            <span className="text-gray-600 text-sm">
+              (Title + {numPages} page{numPages !== 1 ? 's' : ''} = {calculateDays(numPages)} days)
+            </span>
           </div>
         </div>
         {/* Title page first */}
