@@ -126,8 +126,8 @@ export const A5TitleJournalPage: React.FC<A5TitleJournalPageProps> = ({
   locale = 'de-DE',
   customCategories
 }) => {
-  const categoriesToUse = customCategories && customCategories.length > 0 ? customCategories : categories;
-  const totalPoints = categoriesToUse.length * 10;
+  const categoriesToUse = (customCategories && Array.isArray(customCategories) && customCategories.length > 0) ? customCategories : categories;
+  const totalPoints = Array.isArray(categoriesToUse) ? categoriesToUse.length * 10 : 60;
 
   const formatDate = (date: Date): string => {
     const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
@@ -141,7 +141,7 @@ export const A5TitleJournalPage: React.FC<A5TitleJournalPageProps> = ({
 
   return (
     <div className="w-[105mm] h-[148.5mm] p-[12mm_10mm] flex flex-col bg-white">
-      {categoriesToUse.map((category, index) => (
+      {Array.isArray(categoriesToUse) && categoriesToUse.map((category, index) => (
         <JournalEntry
           key={index}
           category={category}

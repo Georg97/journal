@@ -85,7 +85,15 @@
       "journalName": "Journalname",
       "dateRange": "Von — Bis",
       "beginReady": "Beginne, wann immer Du bereit bist"
-    }
+    },
+    "defaultCategories": [
+      "Ernährung & Gewicht",
+      "Fitness & Physis",
+      "Sozial- und Beziehungsleben",
+      "Kreative Entfaltung, Kunst, Musik & Projekte",
+      "Sauberkeit & Ordnung",
+      "Finanzen"
+    ]
   },
   "common": {
     "language": "Sprache"

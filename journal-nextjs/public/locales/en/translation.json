@@ -85,7 +85,15 @@
       "journalName": "Journal Name",
       "dateRange": "From — To",
       "beginReady": "Begin whenever you're ready"
-    }
+    },
+    "defaultCategories": [
+      "Nutrition & Weight",
+      "Fitness & Physical Health",
+      "Social & Relationships",
+      "Creative Expression, Art, Music & Projects",
+      "Cleanliness & Order",
+      "Finances"
+    ]
   },
   "common": {
     "language": "Language"

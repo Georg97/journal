@@ -1,11 +1,26 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '~/components/LanguageSwitcher';
 
 export default function HomePage() {
   const { t } = useTranslation();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Prevent hydration mismatch by waiting for client-side render
+  if (!isClient) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white">
+        <div className="text-gray-400">Loading...</div>
+      </main>
+    );
+  }
 
   return (
     <main className="flex min-h-screen flex-col bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white">

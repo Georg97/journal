@@ -1,15 +1,47 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { A5JournalPage } from '~/components/A5JournalPage';
 import { A5BackCover, A5FrontCover, A5TitleJournalPage } from '~/components/A5TitlePages';
+import { LanguageSwitcher } from '~/components/LanguageSwitcher';
 
 export default function JournalPageRoute() {
+  const { i18n, t, ready } = useTranslation();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // Get today's date in YYYY-MM-DD format
   const getTodayString = () => {
     const today = new Date();
     return today.toISOString().split('T')[0];
+  };
+
+  // Default fallback categories
+  const defaultFallbackCategories = [
+    'Ernährung & Gewicht',
+    'Fitness & Physis',
+    'Sozial- und Beziehungsleben',
+    'Kreative Entfaltung, Kunst, Musik & Projekte',
+    'Sauberkeit & Ordnung',
+    'Finanzen',
+  ];
+
+  // Get default categories based on current language
+  const getDefaultCategories = (): string[] => {
+    try {
+      const cats = t('journal.defaultCategories', { returnObjects: true });
+      if (Array.isArray(cats) && cats.length > 0) {
+        return cats;
+      }
+      return defaultFallbackCategories;
+    } catch {
+      return defaultFallbackCategories;
+    }
   };
 
   const [numPages, setNumPages] = useState<number>(5);
@@ -18,17 +50,20 @@ export default function JournalPageRoute() {
   const [daysInput, setDaysInput] = useState<string>('22');
   const [startDate, setStartDate] = useState<string>(getTodayString());
   const [endDate, setEndDate] = useState<string>('');
-  const [locale, setLocale] = useState<string>('de-DE');
   const [useDateRange, setUseDateRange] = useState<boolean>(true);
-  const [customCategories, setCustomCategories] = useState<string[]>([
-    'Ernährung & Gewicht',
-    'Fitness & Physis',
-    'Sozial- und Beziehungsleben',
-    'Kreative Entfaltung, Kunst, Musik & Projekte',
-    'Sauberkeit & Ordnung',
-    'Finanzen',
-  ]);
+  const [customCategories, setCustomCategories] = useState<string[]>(defaultFallbackCategories);
   const [showCategoryEditor, setShowCategoryEditor] = useState<boolean>(false);
+
+  // Get locale from i18n language
+  const locale = i18n.language === 'en' ? 'en-US' : 'de-DE';
+
+  // Update categories when language changes
+  useEffect(() => {
+    const cats = getDefaultCategories();
+    if (Array.isArray(cats) && cats.length > 0) {
+      setCustomCategories(cats);
+    }
+  }, [i18n.language]);
 
   // Calculate total A5 pages (days)
   const calculateTotalA5Pages = () => {
@@ -101,25 +136,39 @@ export default function JournalPageRoute() {
   // Group all pages into A4 sheets
   const journalA4Sheets = groupA5IntoA4(journalA5Dates);
 
+  // Prevent hydration mismatch by waiting for client-side render
+  if (!isClient) {
+    return (
+      <main className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-gray-600">Loading...</div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-gray-100 flex">
       {/* Sidebar */}
       <div className="w-80 bg-gray-800 text-white p-6 print:hidden overflow-y-auto fixed left-0 top-0 bottom-0 shadow-xl">
-        <h2 className="text-2xl font-bold mb-6">Journal Settings</h2>
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-2xl font-bold">{t('journal.settings.title')}</h2>
+            <LanguageSwitcher />
+          </div>
+        </div>
 
         {/* Navigation */}
-        <div className="mb-6 space-y-2">
+        <div className="mb-6 space-y-3">
           <Link
             href="/"
-            className="block w-full px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 text-center"
+            className="block w-full px-3 py-2.5 bg-gray-700 text-white rounded hover:bg-gray-600 text-center text-sm leading-tight"
           >
-            ← Back to Home
+            {t('journal.settings.backToHome')}
           </Link>
           <button
             onClick={() => window.print()}
-            className="block w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="block w-full px-3 py-2.5 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm leading-tight"
           >
-            🖨️ Print / Save as PDF
+            {t('journal.settings.print')}
           </button>
         </div>
 
@@ -129,16 +178,16 @@ export default function JournalPageRoute() {
         <div className="mb-6">
           <button
             onClick={() => setShowCategoryEditor(!showCategoryEditor)}
-            className="w-full px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 flex items-center justify-between"
+            className="w-full px-3 py-2.5 bg-gray-700 text-white rounded hover:bg-gray-600 flex items-center justify-between text-sm leading-tight"
           >
-            <span>✏️ Edit Categories ({customCategories.length})</span>
-            <span>{showCategoryEditor ? '▼' : '▶'}</span>
+            <span className="text-left break-words pr-2">{t('journal.settings.editCategories').replace('(6)', `(${customCategories.length})`)}</span>
+            <span className="flex-shrink-0">{showCategoryEditor ? '▼' : '▶'}</span>
           </button>
         </div>
 
         {showCategoryEditor && (
           <div className="mb-6 space-y-2 bg-gray-700 p-4 rounded">
-            <div className="text-sm font-medium mb-2">Categories (Max 10)</div>
+            <div className="text-sm font-medium mb-2">{t('journal.settings.categories.title')}</div>
             {customCategories.map((category, index) => (
               <div key={index} className="flex gap-2">
                 <input
@@ -150,7 +199,7 @@ export default function JournalPageRoute() {
                     setCustomCategories(newCategories);
                   }}
                   className="flex-1 px-2 py-1 bg-gray-600 border border-gray-500 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-                  placeholder={`Category ${index + 1}`}
+                  placeholder={`${t('journal.settings.categories.placeholder')} ${index + 1}`}
                 />
                 <button
                   onClick={() => {
@@ -168,11 +217,11 @@ export default function JournalPageRoute() {
                 onClick={() => setCustomCategories([...customCategories, ''])}
                 className="w-full px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
               >
-                + Add Category
+                {t('journal.settings.categories.addCategory')}
               </button>
             )}
             <div className="text-xs text-gray-400 mt-2">
-              Total: /{customCategories.length * 10}
+              {t('journal.settings.categories.total')} /{customCategories.length * 10}
             </div>
           </div>
         )}
@@ -181,14 +230,14 @@ export default function JournalPageRoute() {
 
         {/* Date Range Toggle */}
         <div className="mb-6">
-          <label className="flex items-center gap-3 cursor-pointer bg-gray-700 p-3 rounded hover:bg-gray-600">
+          <label className="flex items-start gap-3 cursor-pointer bg-gray-700 p-3 rounded hover:bg-gray-600">
             <input
               type="checkbox"
               checked={useDateRange}
               onChange={(e) => setUseDateRange(e.target.checked)}
-              className="w-5 h-5"
+              className="w-5 h-5 mt-0.5 flex-shrink-0"
             />
-            <span className="font-medium">Use Date Range</span>
+            <span className="font-medium text-sm leading-tight">{t('journal.settings.useDateRange')}</span>
           </label>
         </div>
 
@@ -196,7 +245,7 @@ export default function JournalPageRoute() {
           <div className="space-y-4">
             {/* Start Date */}
             <div>
-              <label className="block text-sm font-medium mb-2">Start Date</label>
+              <label className="block text-xs font-medium mb-2 leading-tight">{t('journal.settings.startDate')}</label>
               <input
                 type="date"
                 value={startDate}
@@ -216,7 +265,7 @@ export default function JournalPageRoute() {
 
             {/* End Date */}
             <div>
-              <label className="block text-sm font-medium mb-2">End Date</label>
+              <label className="block text-xs font-medium mb-2 leading-tight">{t('journal.settings.endDate')}</label>
               <input
                 type="date"
                 value={endDate}
@@ -234,31 +283,14 @@ export default function JournalPageRoute() {
               />
             </div>
 
-            {/* Locale Selector */}
-            <div>
-              <label className="block text-sm font-medium mb-2">Date Format</label>
-              <select
-                value={locale}
-                onChange={(e) => setLocale(e.target.value)}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-              >
-                <option value="de-DE">🇩🇪 German</option>
-                <option value="en-US">🇺🇸 English (US)</option>
-                <option value="en-GB">🇬🇧 English (UK)</option>
-                <option value="fr-FR">🇫🇷 French</option>
-                <option value="es-ES">🇪🇸 Spanish</option>
-                <option value="it-IT">🇮🇹 Italian</option>
-              </select>
-            </div>
-
             {/* Date Range Info */}
             {startDate && endDate && (
               <div className="bg-blue-600 p-3 rounded">
                 <div className="text-sm font-medium">
-                  📅 {getDaysBetween(startDate, endDate)} days
+                  📅 {getDaysBetween(startDate, endDate)} {t('journal.settings.daysInfo')}
                 </div>
                 <div className="text-sm text-blue-100">
-                  = {numPages} page{numPages !== 1 ? 's' : ''}
+                  = {numPages} {t('journal.settings.pagesInfo')}
                 </div>
               </div>
             )}
@@ -266,7 +298,7 @@ export default function JournalPageRoute() {
         ) : (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Number of Days</label>
+              <label className="block text-xs font-medium mb-2 leading-tight">{t('journal.settings.numberOfDays')}</label>
               <input
                 type="number"
                 min="1"
@@ -300,7 +332,7 @@ export default function JournalPageRoute() {
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
               />
               <div className="mt-2 text-sm text-gray-300">
-                = {numPages} page{numPages !== 1 ? 's' : ''}
+                = {numPages} {t('journal.settings.pagesInfo')}
               </div>
             </div>
           </div>
