@@ -10,6 +10,10 @@ export default function JournalPageRoute() {
   const [inputValue, setInputValue] = useState<string>('5');
   const [inputMode, setInputMode] = useState<'pages' | 'days'>('days');
   const [daysInput, setDaysInput] = useState<string>('22');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+  const [locale, setLocale] = useState<string>('de-DE');
+  const [useDateRange, setUseDateRange] = useState<boolean>(false);
 
   // Calculate total days: Title page has 2 journal sections (bottom left & bottom right)
   // Each additional journal page has 4 sections (2x2 grid)
@@ -26,12 +30,51 @@ export default function JournalPageRoute() {
     return Math.ceil(remainingDays / 4); // Each page provides 4 days
   };
 
+  // Calculate days between two dates
+  const getDaysBetween = (start: string, end: string) => {
+    const startTime = new Date(start).getTime();
+    const endTime = new Date(end).getTime();
+    const diffTime = Math.abs(endTime - startTime);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include both start and end date
+    return diffDays;
+  };
+
+  // Generate array of dates from start to end
+  const generateDates = (start: string, totalDays: number): Date[] => {
+    const dates: Date[] = [];
+    const startDateObj = new Date(start);
+
+    for (let i = 0; i < totalDays; i++) {
+      const currentDate = new Date(startDateObj);
+      currentDate.setDate(startDateObj.getDate() + i);
+      dates.push(currentDate);
+    }
+
+    return dates;
+  };
+
+  // Format date for display
+  const formatDate = (date: Date, locale: string): string => {
+    const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
+    const dateStr = date.toLocaleDateString(locale, {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+    return `${dayName} ${dateStr}`;
+  };
+
+  // Generate dates array if using date range
+  const dates = useDateRange && startDate
+    ? generateDates(startDate, calculateDays(numPages))
+    : [];
+
   return (
     <main className="min-h-screen bg-gray-100">
-      <div className="fixed top-4 left-4 z-10 flex gap-2 print:hidden">
+      <div className="fixed top-4 left-4 right-4 z-10 flex flex-wrap gap-2 print:hidden bg-gray-800/90 p-4 rounded-lg">
         <Link
           href="/"
-          className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
+          className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
         >
           Back to Home
         </Link>
@@ -41,8 +84,91 @@ export default function JournalPageRoute() {
         >
           Print / Save as PDF
         </button>
-        <div className="flex items-center gap-2 ml-4 bg-white px-4 py-2 rounded-lg shadow-sm">
-          <div className="flex gap-2">
+
+        {/* Date Range Toggle */}
+        <label className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm cursor-pointer">
+          <input
+            type="checkbox"
+            checked={useDateRange}
+            onChange={(e) => setUseDateRange(e.target.checked)}
+            className="w-4 h-4"
+          />
+          <span className="text-gray-800 font-medium">Use Dates</span>
+        </label>
+
+        {useDateRange && (
+          <>
+            {/* Start Date */}
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+              <label className="text-gray-800 font-medium">Start:</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => {
+                  setStartDate(e.target.value);
+                  if (endDate && e.target.value) {
+                    const days = getDaysBetween(e.target.value, endDate);
+                    const pages = calculatePages(days);
+                    setNumPages(pages);
+                    setInputValue(pages.toString());
+                    setDaysInput(days.toString());
+                  }
+                }}
+                className="px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* End Date */}
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+              <label className="text-gray-800 font-medium">End:</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => {
+                  setEndDate(e.target.value);
+                  if (startDate && e.target.value) {
+                    const days = getDaysBetween(startDate, e.target.value);
+                    const pages = calculatePages(days);
+                    setNumPages(pages);
+                    setInputValue(pages.toString());
+                    setDaysInput(days.toString());
+                  }
+                }}
+                className="px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Locale Selector */}
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+              <label className="text-gray-800 font-medium">Locale:</label>
+              <select
+                value={locale}
+                onChange={(e) => setLocale(e.target.value)}
+                className="px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="de-DE">🇩🇪 German</option>
+                <option value="en-US">🇺🇸 English (US)</option>
+                <option value="en-GB">🇬🇧 English (UK)</option>
+                <option value="fr-FR">🇫🇷 French</option>
+                <option value="es-ES">🇪🇸 Spanish</option>
+                <option value="it-IT">🇮🇹 Italian</option>
+              </select>
+            </div>
+
+            {/* Date Range Info */}
+            {startDate && endDate && (
+              <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-lg">
+                <span className="text-gray-800 text-sm">
+                  📅 {getDaysBetween(startDate, endDate)} days = {numPages} page{numPages !== 1 ? 's' : ''}
+                </span>
+              </div>
+            )}
+          </>
+        )}
+
+        {!useDateRange && (
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+            <div className="flex gap-2">
             <button
               onClick={() => setInputMode('pages')}
               className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
@@ -140,18 +266,26 @@ export default function JournalPageRoute() {
               </span>
             </>
           )}
-        </div>
+          </div>
+        )}
       </div>
       {/* Title page first */}
       <div className="page-container">
-        <TitlePage />
+        <TitlePage
+          dates={dates.length > 0 ? dates.slice(0, 2) : []}
+          locale={locale}
+        />
       </div>
       {/* Then all journal pages */}
-      {Array.from({ length: numPages }).map((_, index) => (
-        <div key={index} className="page-container">
-          <JournalPage />
-        </div>
-      ))}
+      {Array.from({ length: numPages }).map((_, index) => {
+        const pageStartIndex = 2 + (index * 4); // Title page has 2 days, each page has 4
+        const pageDates = dates.length > 0 ? dates.slice(pageStartIndex, pageStartIndex + 4) : [];
+        return (
+          <div key={index} className="page-container">
+            <JournalPage dates={pageDates} locale={locale} />
+          </div>
+        );
+      })}
     </main>
   );
 }

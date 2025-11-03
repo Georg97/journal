@@ -11,11 +11,17 @@ const categories = [
 
 interface JournalEntryProps {
   category: string;
+  date?: string;
 }
 
-const JournalEntry: React.FC<JournalEntryProps> = ({ category }) => {
+const JournalEntry: React.FC<JournalEntryProps> = ({ category, date }) => {
   return (
     <div className="flex flex-1 flex-col mb-0">
+      {date && (
+        <div className="text-[7pt] text-gray-400 mb-1 font-normal">
+          {date}
+        </div>
+      )}
       <div className="flex items-center justify-between border-b border-gray-500 pb-1 mb-1.5 text-gray-500 flex-shrink-0">
         <span className="text-[8pt] font-bold">{category}</span>
         <span className="text-[7pt] font-normal">/10</span>
@@ -42,9 +48,10 @@ const SummarySection = () => {
 
 interface A5PageProps {
   position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  date?: string;
 }
 
-const A5Page: React.FC<A5PageProps> = ({ position }) => {
+const A5Page: React.FC<A5PageProps> = ({ position, date }) => {
   const borderClasses = {
     'top-left': 'border-r-2 border-b-2 border-dashed border-gray-500 print:border-none',
     'top-right': 'border-b-2 border-dashed border-gray-500 print:border-none',
@@ -57,20 +64,35 @@ const A5Page: React.FC<A5PageProps> = ({ position }) => {
       className={`w-full h-full p-[12mm_10mm] flex flex-col border border-gray-200 print:border-none overflow-hidden ${borderClasses[position]}`}
     >
       {categories.map((category, index) => (
-        <JournalEntry key={index} category={category} />
+        <JournalEntry key={index} category={category} date={index === 0 ? date : undefined} />
       ))}
       <SummarySection />
     </div>
   );
 };
 
-export const JournalPage = () => {
+interface JournalPageProps {
+  dates?: Date[];
+  locale?: string;
+}
+
+export const JournalPage: React.FC<JournalPageProps> = ({ dates = [], locale = 'de-DE' }) => {
+  const formatDate = (date: Date): string => {
+    const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
+    const dateStr = date.toLocaleDateString(locale, {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+    return `${dayName} ${dateStr}`;
+  };
+
   return (
     <div className="w-[210mm] h-[297mm] mx-auto my-[10mm] bg-white grid grid-cols-2 grid-rows-2 gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:m-0 print:shadow-none">
-      <A5Page position="top-left" />
-      <A5Page position="top-right" />
-      <A5Page position="bottom-left" />
-      <A5Page position="bottom-right" />
+      <A5Page position="top-left" date={dates[0] ? formatDate(dates[0]) : undefined} />
+      <A5Page position="top-right" date={dates[1] ? formatDate(dates[1]) : undefined} />
+      <A5Page position="bottom-left" date={dates[2] ? formatDate(dates[2]) : undefined} />
+      <A5Page position="bottom-right" date={dates[3] ? formatDate(dates[3]) : undefined} />
     </div>
   );
 };

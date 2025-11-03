@@ -11,11 +11,17 @@ const categories = [
 
 interface JournalEntryProps {
   category: string;
+  date?: string;
 }
 
-const JournalEntry: React.FC<JournalEntryProps> = ({ category }) => {
+const JournalEntry: React.FC<JournalEntryProps> = ({ category, date }) => {
   return (
     <div className="flex flex-1 flex-col mb-0">
+      {date && (
+        <div className="text-[7pt] text-gray-400 mb-1 font-normal">
+          {date}
+        </div>
+      )}
       <div className="flex items-center justify-between border-b border-gray-500 pb-1 mb-1.5 text-gray-500 flex-shrink-0">
         <span className="text-[8pt] font-bold">{category}</span>
         <span className="text-[7pt] font-normal">/10</span>
@@ -117,7 +123,22 @@ const A5Section: React.FC<A5SectionProps> = ({ children, side, type }) => {
   );
 };
 
-export const TitlePage = () => {
+interface TitlePageProps {
+  dates?: Date[];
+  locale?: string;
+}
+
+export const TitlePage: React.FC<TitlePageProps> = ({ dates = [], locale = 'de-DE' }) => {
+  const formatDate = (date: Date): string => {
+    const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
+    const dateStr = date.toLocaleDateString(locale, {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+    return `${dayName} ${dateStr}`;
+  };
+
   return (
     <div className="w-[210mm] h-[297mm] mx-auto my-[10mm] bg-white grid grid-cols-2 grid-rows-[148.5mm_148.5mm] gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:m-0 print:shadow-none">
       {/* Summary Page (Top-Left A5 Page) */}
@@ -133,7 +154,7 @@ export const TitlePage = () => {
       {/* Journal page (Bottom-Left A5 Page) */}
       <A5Section side="left" type="journal">
         {categories.map((category, index) => (
-          <JournalEntry key={index} category={category} />
+          <JournalEntry key={index} category={category} date={index === 0 && dates[0] ? formatDate(dates[0]) : undefined} />
         ))}
         <SummarySection />
       </A5Section>
@@ -141,7 +162,7 @@ export const TitlePage = () => {
       {/* Journal page (Bottom-Right A5 Page) */}
       <A5Section side="right" type="journal">
         {categories.map((category, index) => (
-          <JournalEntry key={index} category={category} />
+          <JournalEntry key={index} category={category} date={index === 0 && dates[1] ? formatDate(dates[1]) : undefined} />
         ))}
         <SummarySection />
       </A5Section>
