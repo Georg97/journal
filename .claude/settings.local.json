@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-t3-app@latest journal-nextjs --noGit --CI --tailwind --appRouter --typescript)",
+      "Bash(npx shadcn@latest init -d)",
+      "Bash(npm run dev:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

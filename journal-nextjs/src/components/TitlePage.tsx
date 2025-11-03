@@ -1,0 +1,150 @@
+import React from 'react';
+
+const categories = [
+  'Ernährung & Gewicht',
+  'Fitness & Physis',
+  'Sozial- und Beziehungsleben',
+  'Kreative Entfaltung, Kunst, Musik & Projekte',
+  'Sauberkeit & Ordnung',
+  'Finanzen',
+];
+
+interface JournalEntryProps {
+  category: string;
+}
+
+const JournalEntry: React.FC<JournalEntryProps> = ({ category }) => {
+  return (
+    <div className="flex flex-1 flex-col mb-0">
+      <div className="flex items-center justify-between border-b border-gray-500 pb-1 mb-1.5 text-gray-500 flex-shrink-0">
+        <span className="text-[8pt] font-bold">{category}</span>
+        <span className="text-[7pt] font-normal">/10</span>
+      </div>
+      <div className="flex-1 border-b border-gray-300 mb-0 relative bg-[repeating-linear-gradient(to_bottom,transparent,transparent_18px,#f0f0f0_18px,#f0f0f0_19px)] bg-[length:100%_19px] bg-[position:0_0] last:border-b-0"></div>
+    </div>
+  );
+};
+
+const SummarySection = () => {
+  return (
+    <div className="flex flex-row gap-[8mm] mt-[2mm] text-[6pt] text-gray-400">
+      <div className="flex gap-[2mm] items-center">
+        <span className="font-normal">Total</span>
+        <span className="border-b-[0.5px] border-gray-400 w-[10mm] text-right">/60</span>
+      </div>
+      <div className="flex gap-[2mm] items-center">
+        <span className="font-normal">Rating</span>
+        <span className="border-b-[0.5px] border-gray-400 w-[10mm] text-right">= /10</span>
+      </div>
+    </div>
+  );
+};
+
+const BackCover = () => {
+  return (
+    <div className="flex flex-col h-full">
+      <div className="text-center mb-[12mm]">
+        <div className="text-[18pt] font-bold text-gray-800 mb-[3mm] tracking-wide">
+          What I Learned
+        </div>
+        <div className="text-[9pt] text-gray-500 font-normal">
+          A Summary of My Journey
+        </div>
+      </div>
+
+      <div className="flex-1 flex flex-col">
+        <div className="mb-[10mm]">
+          <div className="text-[11pt] font-semibold text-gray-800 mb-[5mm]">
+            Key Insights
+          </div>
+          <div className="flex-1 border-none bg-[repeating-linear-gradient(to_bottom,transparent,transparent_12px,#f0f0f0_12px,#f0f0f0_13px)] bg-[length:100%_13px] bg-[position:0_0] min-h-[40mm]"></div>
+        </div>
+      </div>
+
+      <div className="text-center text-[8pt] text-gray-400 pt-[8mm] mt-[8mm] border-t border-gray-300">
+        Reflect and grow
+      </div>
+    </div>
+  );
+};
+
+const FrontCover = () => {
+  return (
+    <div className="flex flex-col items-center justify-between text-center h-full">
+      <div>
+        <div className="text-[32pt] font-bold text-gray-800 mb-[10mm] tracking-[2px]">
+          Journal
+        </div>
+        <div className="w-[80mm] h-[2px] bg-gradient-to-r from-transparent via-gray-800 to-transparent my-[15mm]"></div>
+      </div>
+      <div className="flex flex-col gap-[12mm] mt-auto pt-[20mm]">
+        <div className="flex flex-col gap-[3mm]">
+          <div className="text-[9pt] font-semibold text-gray-500 uppercase tracking-wide">
+            Journal Name
+          </div>
+          <div className="border-b border-gray-800 pb-[2mm] text-[11pt] text-gray-800 min-h-[5mm]"></div>
+        </div>
+        <div className="flex flex-col gap-[3mm]">
+          <div className="text-[9pt] font-semibold text-gray-500 uppercase tracking-wide">
+            From — To
+          </div>
+          <div className="border-b border-gray-800 pb-[2mm] text-[11pt] text-gray-800 min-h-[5mm]"></div>
+        </div>
+      </div>
+      <div className="text-[9pt] text-gray-400 mt-[12mm] text-center">
+        Begin whenever you&apos;re ready
+      </div>
+    </div>
+  );
+};
+
+interface A5SectionProps {
+  children: React.ReactNode;
+  side: 'left' | 'right';
+  type: 'cover' | 'journal';
+}
+
+const A5Section: React.FC<A5SectionProps> = ({ children, side, type }) => {
+  const padding = type === 'cover' ? 'p-[15mm_12mm]' : 'p-[12mm_10mm]';
+  const borderClass = side === 'left' ? 'border-r border-gray-300 print:border-none' : '';
+
+  return (
+    <div
+      className={`w-full h-full flex flex-col border border-gray-200 print:border-none ${padding} ${borderClass}`}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const TitlePage = () => {
+  return (
+    <div className="w-[210mm] h-[297mm] mx-auto my-[10mm] bg-white grid grid-cols-2 grid-rows-[148.5mm_148.5mm] gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:m-0 print:shadow-none">
+      {/* Summary Page (Top-Left A5 Page) */}
+      <A5Section side="left" type="cover">
+        <BackCover />
+      </A5Section>
+
+      {/* Front Cover (Top-Right A5 Page) */}
+      <A5Section side="right" type="cover">
+        <FrontCover />
+      </A5Section>
+
+      {/* Journal page (Bottom-Left A5 Page) */}
+      <A5Section side="left" type="journal">
+        {categories.map((category, index) => (
+          <JournalEntry key={index} category={category} />
+        ))}
+        <SummarySection />
+      </A5Section>
+
+      {/* Journal page (Bottom-Right A5 Page) */}
+      <A5Section side="right" type="journal">
+        {categories.map((category, index) => (
+          <JournalEntry key={index} category={category} />
+        ))}
+        <SummarySection />
+      </A5Section>
+    </div>
+  );
+};
