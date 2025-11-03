@@ -131,18 +131,64 @@
 
 /* Print-specific styles */
 @media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
   body {
     background-color: white;
     padding: 0;
+    margin: 0;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 0;
   }
 
   .page-container {
+    page-break-before: auto;
     page-break-after: always;
-    margin: 0;
-    padding: 0;
+    page-break-inside: avoid;
+    break-before: auto;
+    break-after: always;
+    break-inside: avoid;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    display: block !important;
+    position: relative !important;
+    overflow: hidden !important;
   }
 
   .page-container:last-child {
     page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* Ensure grid works properly in print */
+  .page-container {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: repeat(2, 1fr) !important;
+    gap: 0 !important;
+  }
+
+  .page-container > * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    width: 105mm !important;
+    height: 148.5mm !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure main content takes full width in print */
+  main > div {
+    margin-left: 0 !important;
+    padding: 0 !important;
   }
 }
