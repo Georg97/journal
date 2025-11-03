@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { TitlePage } from '~/components/TitlePage';
-import { JournalPage } from '~/components/JournalPage';
+import { A5JournalPage } from '~/components/A5JournalPage';
+import { A5BackCover, A5FrontCover, A5TitleJournalPage } from '~/components/A5TitlePages';
 
 export default function JournalPageRoute() {
   // Get today's date in YYYY-MM-DD format
@@ -21,19 +21,26 @@ export default function JournalPageRoute() {
   const [locale, setLocale] = useState<string>('de-DE');
   const [useDateRange, setUseDateRange] = useState<boolean>(true);
 
-  // Calculate total days: Title page has 2 journal sections (bottom left & bottom right)
-  // Each additional journal page has 4 sections (2x2 grid)
-  const calculateDays = (pages: number) => {
+  // Calculate total A5 pages (days)
+  const calculateTotalA5Pages = () => {
+    if (useDateRange && startDate && endDate) {
+      return getDaysBetween(startDate, endDate);
+    }
+    return inputMode === 'days' ? parseInt(daysInput) || 0 : calculateDaysFromPages(parseInt(inputValue) || 0);
+  };
+
+  // Calculate days from A4 pages (deprecated but kept for non-date mode)
+  const calculateDaysFromPages = (a4Pages: number) => {
     const titlePageDays = 2; // Title page has 2 journal sections at the bottom
-    const additionalDays = pages * 4; // Each journal page has 4 A5 sections
+    const additionalDays = a4Pages * 4; // Each A4 page has 4 A5 sections
     return titlePageDays + additionalDays;
   };
 
-  // Calculate pages needed for target days
+  // Calculate A4 pages needed for target days (deprecated but kept for non-date mode)
   const calculatePages = (days: number) => {
     if (days <= 2) return 0; // Title page alone provides 2 days
     const remainingDays = days - 2;
-    return Math.ceil(remainingDays / 4); // Each page provides 4 days
+    return Math.ceil(remainingDays / 4); // Each A4 page provides 4 days
   };
 
   // Calculate days between two dates
@@ -59,21 +66,31 @@ export default function JournalPageRoute() {
     return dates;
   };
 
-  // Format date for display
-  const formatDate = (date: Date, locale: string): string => {
-    const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
-    const dateStr = date.toLocaleDateString(locale, {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-    return `${dayName} ${dateStr}`;
+  // Get total days and generate dates
+  const totalDays = calculateTotalA5Pages();
+  const dates = useDateRange && startDate && endDate
+    ? generateDates(startDate, totalDays)
+    : generateDates(startDate || getTodayString(), totalDays);
+
+  // Group A5 pages into A4 sheets (2x2 grid = 4 A5 pages per A4)
+  const groupA5IntoA4 = (a5Pages: (Date | undefined)[]): (Date | undefined)[][] => {
+    const a4Sheets: (Date | undefined)[][] = [];
+    for (let i = 0; i < a5Pages.length; i += 4) {
+      a4Sheets.push(a5Pages.slice(i, i + 4));
+    }
+    return a4Sheets;
   };
 
-  // Generate dates array if using date range
-  const dates = useDateRange && startDate
-    ? generateDates(startDate, calculateDays(numPages))
-    : [];
+  // Prepare A5 pages: All pages including title pages
+  const allA5Pages = dates.length > 0 ? dates : [];
+
+  // Title page has 4 A5 sections: Back Cover, Front Cover, 2 Journal pages
+  // We need at least 2 dates for the journal sections on title page
+  const titleA5Dates = allA5Pages.slice(0, 2); // First 2 dates for title page journal sections
+  const journalA5Dates = allA5Pages.slice(2); // Rest for journal pages
+
+  // Group all pages into A4 sheets
+  const journalA4Sheets = groupA5IntoA4(journalA5Dates);
 
   return (
     <main className="min-h-screen bg-gray-100 flex">
@@ -293,23 +310,74 @@ export default function JournalPageRoute() {
 
       {/* Main Content Area */}
       <div className="flex-1 ml-80 print:ml-0">
-        {/* Title page first */}
-        <div className="page-container">
-          <TitlePage
-            dates={dates.length > 0 ? dates.slice(0, 2) : []}
-            locale={locale}
-          />
+        {/* Title page - A4 sheet with 4 A5 sections */}
+        <div className="w-[210mm] h-[297mm] mx-auto my-[10mm] bg-white grid grid-cols-2 grid-rows-2 gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:m-0 print:shadow-none page-container">
+          {/* Top-Left: Back Cover / Summary */}
+          <div className="border-r-2 border-b-2 border-dashed border-gray-500 print:border-none">
+            <A5BackCover />
+          </div>
+          {/* Top-Right: Front Cover */}
+          <div className="border-b-2 border-dashed border-gray-500 print:border-none">
+            <A5FrontCover />
+          </div>
+          {/* Bottom-Left: First Journal Page */}
+          <div className="border-r-2 border-dashed border-gray-500 print:border-none">
+            {titleA5Dates[0] ? (
+              <A5TitleJournalPage date={titleA5Dates[0]} locale={locale} />
+            ) : (
+              <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
+            )}
+          </div>
+          {/* Bottom-Right: Second Journal Page */}
+          <div className="print:border-none">
+            {titleA5Dates[1] ? (
+              <A5TitleJournalPage date={titleA5Dates[1]} locale={locale} />
+            ) : (
+              <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
+            )}
+          </div>
         </div>
-        {/* Then all journal pages */}
-        {Array.from({ length: numPages }).map((_, index) => {
-          const pageStartIndex = 2 + (index * 4); // Title page has 2 days, each page has 4
-          const pageDates = dates.length > 0 ? dates.slice(pageStartIndex, pageStartIndex + 4) : [];
-          return (
-            <div key={index} className="page-container">
-              <JournalPage dates={pageDates} locale={locale} />
+
+        {/* Then all journal A4 sheets */}
+        {journalA4Sheets.map((a4Sheet, sheetIndex) => (
+          <div
+            key={sheetIndex}
+            className="w-[210mm] h-[297mm] mx-auto my-[10mm] bg-white grid grid-cols-2 grid-rows-2 gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:m-0 print:shadow-none page-container"
+          >
+            {/* Top-Left A5 */}
+            <div className="border-r-2 border-b-2 border-dashed border-gray-500 print:border-none">
+              {a4Sheet[0] ? (
+                <A5JournalPage date={a4Sheet[0]} locale={locale} />
+              ) : (
+                <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
+              )}
             </div>
-          );
-        })}
+            {/* Top-Right A5 */}
+            <div className="border-b-2 border-dashed border-gray-500 print:border-none">
+              {a4Sheet[1] ? (
+                <A5JournalPage date={a4Sheet[1]} locale={locale} />
+              ) : (
+                <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
+              )}
+            </div>
+            {/* Bottom-Left A5 */}
+            <div className="border-r-2 border-dashed border-gray-500 print:border-none">
+              {a4Sheet[2] ? (
+                <A5JournalPage date={a4Sheet[2]} locale={locale} />
+              ) : (
+                <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
+              )}
+            </div>
+            {/* Bottom-Right A5 */}
+            <div className="print:border-none">
+              {a4Sheet[3] ? (
+                <A5JournalPage date={a4Sheet[3]} locale={locale} />
+              ) : (
+                <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
     </main>
   );

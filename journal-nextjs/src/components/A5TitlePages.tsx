@@ -98,31 +98,31 @@ const FrontCover = () => {
   );
 };
 
-interface A5SectionProps {
-  children: React.ReactNode;
-  side: 'left' | 'right';
-  type: 'cover' | 'journal';
-}
-
-const A5Section: React.FC<A5SectionProps> = ({ children, side, type }) => {
-  const padding = type === 'cover' ? 'p-[15mm_12mm]' : 'p-[12mm_10mm]';
-  const borderClass = side === 'left' ? 'border-r border-gray-300 print:border-none' : '';
-
+// Summary/Back Cover A5 Page
+export const A5BackCover: React.FC = () => {
   return (
-    <div
-      className={`w-full h-full flex flex-col border border-gray-200 print:border-none ${padding} ${borderClass}`}
-    >
-      {children}
+    <div className="w-[105mm] h-[148.5mm] p-[15mm_12mm] flex flex-col bg-white">
+      <BackCover />
     </div>
   );
 };
 
-interface TitlePageProps {
-  dates?: Date[];
+// Front Cover A5 Page
+export const A5FrontCover: React.FC = () => {
+  return (
+    <div className="w-[105mm] h-[148.5mm] p-[15mm_12mm] flex flex-col bg-white">
+      <FrontCover />
+    </div>
+  );
+};
+
+// Journal Entry A5 Page (for title page bottom sections)
+interface A5TitleJournalPageProps {
+  date?: Date;
   locale?: string;
 }
 
-export const TitlePage: React.FC<TitlePageProps> = ({ dates = [], locale = 'de-DE' }) => {
+export const A5TitleJournalPage: React.FC<A5TitleJournalPageProps> = ({ date, locale = 'de-DE' }) => {
   const formatDate = (date: Date): string => {
     const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
     const dateStr = date.toLocaleDateString(locale, {
@@ -134,32 +134,15 @@ export const TitlePage: React.FC<TitlePageProps> = ({ dates = [], locale = 'de-D
   };
 
   return (
-    <div className="w-[210mm] h-[297mm] mx-auto my-[10mm] bg-white grid grid-cols-2 grid-rows-[148.5mm_148.5mm] gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:m-0 print:shadow-none">
-      {/* Summary Page (Top-Left A5 Page) */}
-      <A5Section side="left" type="cover">
-        <BackCover />
-      </A5Section>
-
-      {/* Front Cover (Top-Right A5 Page) */}
-      <A5Section side="right" type="cover">
-        <FrontCover />
-      </A5Section>
-
-      {/* Journal page (Bottom-Left A5 Page) */}
-      <A5Section side="left" type="journal">
-        {categories.map((category, index) => (
-          <JournalEntry key={index} category={category} date={index === 0 && dates[0] ? formatDate(dates[0]) : undefined} />
-        ))}
-        <SummarySection />
-      </A5Section>
-
-      {/* Journal page (Bottom-Right A5 Page) */}
-      <A5Section side="right" type="journal">
-        {categories.map((category, index) => (
-          <JournalEntry key={index} category={category} date={index === 0 && dates[1] ? formatDate(dates[1]) : undefined} />
-        ))}
-        <SummarySection />
-      </A5Section>
+    <div className="w-[105mm] h-[148.5mm] p-[12mm_10mm] flex flex-col bg-white">
+      {categories.map((category, index) => (
+        <JournalEntry
+          key={index}
+          category={category}
+          date={index === 0 && date ? formatDate(date) : undefined}
+        />
+      ))}
+      <SummarySection />
     </div>
   );
 };

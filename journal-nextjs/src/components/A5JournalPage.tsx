@@ -40,37 +40,12 @@ const SummarySection = () => {
   );
 };
 
-interface A5PageProps {
-  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-  date?: string;
-}
-
-const A5Page: React.FC<A5PageProps> = ({ position, date }) => {
-  const borderClasses = {
-    'top-left': 'border-r-2 border-b-2 border-dashed border-gray-500 print:border-none',
-    'top-right': 'border-b-2 border-dashed border-gray-500 print:border-none',
-    'bottom-left': 'border-r-2 border-dashed border-gray-500 print:border-none',
-    'bottom-right': 'print:border-none',
-  };
-
-  return (
-    <div
-      className={`w-full h-full p-[12mm_10mm] flex flex-col border border-gray-200 print:border-none overflow-hidden ${borderClasses[position]}`}
-    >
-      {categories.map((category, index) => (
-        <JournalEntry key={index} category={category} date={index === 0 ? date : undefined} />
-      ))}
-      <SummarySection />
-    </div>
-  );
-};
-
-interface JournalPageProps {
-  dates?: Date[];
+interface A5JournalPageProps {
+  date?: Date;
   locale?: string;
 }
 
-export const JournalPage: React.FC<JournalPageProps> = ({ dates = [], locale = 'de-DE' }) => {
+export const A5JournalPage: React.FC<A5JournalPageProps> = ({ date, locale = 'de-DE' }) => {
   const formatDate = (date: Date): string => {
     const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
     const dateStr = date.toLocaleDateString(locale, {
@@ -82,11 +57,15 @@ export const JournalPage: React.FC<JournalPageProps> = ({ dates = [], locale = '
   };
 
   return (
-    <div className="w-[210mm] h-[297mm] mx-auto my-[10mm] bg-white grid grid-cols-2 grid-rows-2 gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:m-0 print:shadow-none">
-      <A5Page position="top-left" date={dates[0] ? formatDate(dates[0]) : undefined} />
-      <A5Page position="top-right" date={dates[1] ? formatDate(dates[1]) : undefined} />
-      <A5Page position="bottom-left" date={dates[2] ? formatDate(dates[2]) : undefined} />
-      <A5Page position="bottom-right" date={dates[3] ? formatDate(dates[3]) : undefined} />
+    <div className="w-[105mm] h-[148.5mm] p-[12mm_10mm] flex flex-col border border-gray-200 print:border-none overflow-hidden bg-white">
+      {categories.map((category, index) => (
+        <JournalEntry
+          key={index}
+          category={category}
+          date={index === 0 && date ? formatDate(date) : undefined}
+        />
+      ))}
+      <SummarySection />
     </div>
   );
 };
