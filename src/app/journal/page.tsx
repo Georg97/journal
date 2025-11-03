@@ -12,6 +12,7 @@ export const dynamic = 'force-dynamic';
 export default function JournalPageRoute() {
   const { i18n, t, ready } = useTranslation();
   const [isClient, setIsClient] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -149,8 +150,41 @@ export default function JournalPageRoute() {
 
   return (
     <main className="min-h-screen bg-gray-100 flex">
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-gray-800 text-white rounded-lg shadow-lg print:hidden"
+        aria-label="Toggle menu"
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          {isSidebarOpen ? (
+            <path d="M6 18L18 6M6 6l12 12" />
+          ) : (
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          )}
+        </svg>
+      </button>
+
+      {/* Overlay for mobile */}
+      {isSidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30 print:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className="w-80 bg-gray-800 text-white p-6 print:hidden overflow-y-auto fixed left-0 top-0 bottom-0 shadow-xl">
+      <div className={`w-80 bg-gray-800 text-white p-6 print:hidden overflow-y-auto fixed left-0 top-0 bottom-0 shadow-xl z-40 transition-transform duration-300 ease-in-out ${
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      } lg:translate-x-0`}>
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-2xl font-bold">{t('journal.settings.title')}</h2>
@@ -167,7 +201,10 @@ export default function JournalPageRoute() {
             {t('journal.settings.backToHome')}
           </Link>
           <button
-            onClick={() => window.print()}
+            onClick={() => {
+              window.print();
+              setIsSidebarOpen(false);
+            }}
             className="block w-full px-3 py-2.5 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm leading-tight"
           >
             {t('journal.settings.print')}
@@ -342,10 +379,10 @@ export default function JournalPageRoute() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 ml-80 print:ml-0">
+      <div className="flex-1 ml-0 lg:ml-80 print:ml-0 pt-16 px-4 pb-4 lg:p-0">
         {/* Title page - A4 sheet with 4 A5 sections */}
         {totalDays > 0 && (
-          <div className="w-[210mm] h-[297mm] mx-auto my-[10mm] bg-white grid grid-cols-2 grid-rows-2 gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:m-0 print:shadow-none page-container">
+          <div className="w-full max-w-[210mm] h-auto aspect-[210/297] lg:w-[210mm] lg:h-[297mm] mx-auto my-4 lg:my-[10mm] bg-white grid grid-cols-2 grid-rows-2 gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:w-[210mm] print:h-[297mm] print:m-0 print:shadow-none page-container">
             {/* Top-Left: Back Cover / Summary */}
             <div className="border-r-2 border-b-2 border-dashed border-gray-500 print:border-none">
               <A5BackCover />
@@ -385,7 +422,7 @@ export default function JournalPageRoute() {
         {journalA4Sheets.map((a4Sheet, sheetIndex) => (
           <div
             key={sheetIndex}
-            className="w-[210mm] h-[297mm] mx-auto my-[10mm] bg-white grid grid-cols-2 grid-rows-2 gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:m-0 print:shadow-none page-container"
+            className="w-full max-w-[210mm] h-auto aspect-[210/297] lg:w-[210mm] lg:h-[297mm] mx-auto my-4 lg:my-[10mm] bg-white grid grid-cols-2 grid-rows-2 gap-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden print:w-[210mm] print:h-[297mm] print:m-0 print:shadow-none page-container"
           >
             {/* Top-Left A5 */}
             <div className="border-r-2 border-b-2 border-dashed border-gray-500 print:border-none">
