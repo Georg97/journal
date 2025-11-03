@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { categories, getTotalPoints } from '~/lib/categories';
 
 interface JournalEntryProps {
@@ -21,76 +24,88 @@ const JournalEntry: React.FC<JournalEntryProps> = ({ category, date }) => {
   );
 };
 
-const SummarySection = () => {
+interface SummarySectionProps {
+  t: (key: string) => string;
+}
+
+const SummarySection: React.FC<SummarySectionProps> = ({ t }) => {
   const totalPoints = getTotalPoints();
 
   return (
     <div className="flex flex-row gap-[8mm] mt-[2mm] text-[6pt] text-gray-400">
       <div className="flex gap-[2mm] items-center">
-        <span className="font-normal">Total</span>
+        <span className="font-normal">{t('journal.summary.total')}</span>
         <span className="border-b-[0.5px] border-gray-400 w-[10mm] text-right">/{totalPoints}</span>
       </div>
       <div className="flex gap-[2mm] items-center">
-        <span className="font-normal">Rating</span>
+        <span className="font-normal">{t('journal.summary.rating')}</span>
         <span className="border-b-[0.5px] border-gray-400 w-[10mm] text-right">= /10</span>
       </div>
     </div>
   );
 };
 
-const BackCover = () => {
+interface BackCoverProps {
+  t: (key: string) => string;
+}
+
+const BackCover: React.FC<BackCoverProps> = ({ t }) => {
   return (
     <div className="flex flex-col h-full">
       <div className="text-center mb-[12mm]">
         <div className="text-[18pt] font-bold text-gray-800 mb-[3mm] tracking-wide">
-          What I Learned
+          {t('journal.titlePage.whatILearned')}
         </div>
         <div className="text-[9pt] text-gray-500 font-normal">
-          A Summary of My Journey
+          {t('journal.titlePage.summary')}
         </div>
       </div>
 
       <div className="flex-1 flex flex-col">
         <div className="mb-[10mm]">
           <div className="text-[11pt] font-semibold text-gray-800 mb-[5mm]">
-            Key Insights
+            {t('journal.titlePage.keyInsights')}
           </div>
           <div className="flex-1 border-none bg-[repeating-linear-gradient(to_bottom,transparent,transparent_12px,#f0f0f0_12px,#f0f0f0_13px)] bg-[length:100%_13px] bg-[position:0_0] min-h-[40mm]"></div>
         </div>
       </div>
 
       <div className="text-center text-[8pt] text-gray-400 pt-[8mm] mt-[8mm] border-t border-gray-300">
-        Reflect and grow
+        {t('journal.titlePage.reflectAndGrow')}
       </div>
     </div>
   );
 };
 
-const FrontCover = () => {
+interface FrontCoverProps {
+  t: (key: string) => string;
+}
+
+const FrontCover: React.FC<FrontCoverProps> = ({ t }) => {
   return (
     <div className="flex flex-col items-center justify-between text-center h-full">
       <div>
         <div className="text-[32pt] font-bold text-gray-800 mb-[10mm] tracking-[2px]">
-          Journal
+          {t('journal.titlePage.journalTitle')}
         </div>
         <div className="w-[80mm] h-[2px] bg-gradient-to-r from-transparent via-gray-800 to-transparent my-[15mm]"></div>
       </div>
       <div className="flex flex-col gap-[12mm] mt-auto pt-[20mm]">
         <div className="flex flex-col gap-[3mm]">
           <div className="text-[9pt] font-semibold text-gray-500 uppercase tracking-wide">
-            Journal Name
+            {t('journal.titlePage.journalName')}
           </div>
           <div className="border-b border-gray-800 pb-[2mm] text-[11pt] text-gray-800 min-h-[5mm]"></div>
         </div>
         <div className="flex flex-col gap-[3mm]">
           <div className="text-[9pt] font-semibold text-gray-500 uppercase tracking-wide">
-            From — To
+            {t('journal.titlePage.dateRange')}
           </div>
           <div className="border-b border-gray-800 pb-[2mm] text-[11pt] text-gray-800 min-h-[5mm]"></div>
         </div>
       </div>
       <div className="text-[9pt] text-gray-400 mt-[12mm] text-center">
-        Begin whenever you&apos;re ready
+        {t('journal.titlePage.beginReady')}
       </div>
     </div>
   );
@@ -98,18 +113,22 @@ const FrontCover = () => {
 
 // Summary/Back Cover A5 Page
 export const A5BackCover: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="w-[105mm] h-[148.5mm] p-[15mm_12mm] flex flex-col bg-white">
-      <BackCover />
+      <BackCover t={t} />
     </div>
   );
 };
 
 // Front Cover A5 Page
 export const A5FrontCover: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="w-[105mm] h-[148.5mm] p-[15mm_12mm] flex flex-col bg-white">
-      <FrontCover />
+      <FrontCover t={t} />
     </div>
   );
 };
@@ -126,6 +145,7 @@ export const A5TitleJournalPage: React.FC<A5TitleJournalPageProps> = ({
   locale = 'de-DE',
   customCategories
 }) => {
+  const { t } = useTranslation();
   const categoriesToUse = (customCategories && Array.isArray(customCategories) && customCategories.length > 0) ? customCategories : categories;
   const totalPoints = Array.isArray(categoriesToUse) ? categoriesToUse.length * 10 : 60;
 
@@ -150,11 +170,11 @@ export const A5TitleJournalPage: React.FC<A5TitleJournalPageProps> = ({
       ))}
       <div className="flex flex-row gap-[8mm] mt-[2mm] text-[6pt] text-gray-400">
         <div className="flex gap-[2mm] items-center">
-          <span className="font-normal">Total</span>
+          <span className="font-normal">{t('journal.summary.total')}</span>
           <span className="border-b-[0.5px] border-gray-400 w-[10mm] text-right">/{totalPoints}</span>
         </div>
         <div className="flex gap-[2mm] items-center">
-          <span className="font-normal">Rating</span>
+          <span className="font-normal">{t('journal.summary.rating')}</span>
           <span className="border-b-[0.5px] border-gray-400 w-[10mm] text-right">= /10</span>
         </div>
       </div>

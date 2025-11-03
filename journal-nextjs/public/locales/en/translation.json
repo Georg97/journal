@@ -86,6 +86,10 @@
       "dateRange": "From — To",
       "beginReady": "Begin whenever you're ready"
     },
+    "summary": {
+      "total": "Total",
+      "rating": "Rating"
+    },
     "defaultCategories": [
       "Nutrition & Weight",
       "Fitness & Physical Health",

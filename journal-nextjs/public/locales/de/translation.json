@@ -86,6 +86,10 @@
       "dateRange": "Von — Bis",
       "beginReady": "Beginne, wann immer Du bereit bist"
     },
+    "summary": {
+      "total": "Gesamt",
+      "rating": "Bewertung"
+    },
     "defaultCategories": [
       "Ernährung & Gewicht",
       "Fitness & Physis",

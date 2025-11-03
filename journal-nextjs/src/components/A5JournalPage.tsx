@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { categories, getTotalPoints } from '~/lib/categories';
 
 interface JournalEntryProps {
@@ -21,17 +24,21 @@ const JournalEntry: React.FC<JournalEntryProps> = ({ category, date }) => {
   );
 };
 
-const SummarySection = () => {
+interface SummarySectionProps {
+  t: (key: string) => string;
+}
+
+const SummarySection: React.FC<SummarySectionProps> = ({ t }) => {
   const totalPoints = getTotalPoints();
 
   return (
     <div className="flex flex-row gap-[8mm] mt-[2mm] text-[6pt] text-gray-400">
       <div className="flex gap-[2mm] items-center">
-        <span className="font-normal">Total</span>
+        <span className="font-normal">{t('journal.summary.total')}</span>
         <span className="border-b-[0.5px] border-gray-400 w-[10mm] text-right">/{totalPoints}</span>
       </div>
       <div className="flex gap-[2mm] items-center">
-        <span className="font-normal">Rating</span>
+        <span className="font-normal">{t('journal.summary.rating')}</span>
         <span className="border-b-[0.5px] border-gray-400 w-[10mm] text-right">= /10</span>
       </div>
     </div>
@@ -49,6 +56,7 @@ export const A5JournalPage: React.FC<A5JournalPageProps> = ({
   locale = 'de-DE',
   customCategories
 }) => {
+  const { t } = useTranslation();
   const categoriesToUse = (customCategories && Array.isArray(customCategories) && customCategories.length > 0) ? customCategories : categories;
   const totalPoints = Array.isArray(categoriesToUse) ? categoriesToUse.length * 10 : 60;
 
@@ -73,11 +81,11 @@ export const A5JournalPage: React.FC<A5JournalPageProps> = ({
       ))}
       <div className="flex flex-row gap-[8mm] mt-[2mm] text-[6pt] text-gray-400">
         <div className="flex gap-[2mm] items-center">
-          <span className="font-normal">Total</span>
+          <span className="font-normal">{t('journal.summary.total')}</span>
           <span className="border-b-[0.5px] border-gray-400 w-[10mm] text-right">/{totalPoints}</span>
         </div>
         <div className="flex gap-[2mm] items-center">
-          <span className="font-normal">Rating</span>
+          <span className="font-normal">{t('journal.summary.rating')}</span>
           <span className="border-b-[0.5px] border-gray-400 w-[10mm] text-right">= /10</span>
         </div>
       </div>
