@@ -9,11 +9,9 @@ interface JournalEntryProps {
 const JournalEntry: React.FC<JournalEntryProps> = ({ category, date }) => {
   return (
     <div className="flex flex-1 flex-col mb-0">
-      {date && (
-        <div className="text-[7pt] text-gray-400 mb-1 font-normal">
-          {date}
-        </div>
-      )}
+      <div className={`text-[7pt] text-gray-400 font-normal ${date ? 'mb-1' : 'mb-1 invisible'}`}>
+        {date || 'placeholder'}
+      </div>
       <div className="flex items-center justify-between border-b border-gray-500 pb-1 mb-1.5 text-gray-500 flex-shrink-0">
         <span className="text-[8pt] font-bold">{category}</span>
         <span className="text-[7pt] font-normal">/10</span>
