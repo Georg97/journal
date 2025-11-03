@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DIY A5 Journal - Title Page</title>
-    <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,7 +12,7 @@
         }
 
         body {
-            font-family: 'Spectral', serif;
+            font-family: 'Georgia', serif;
             background-color: #f5f5f5;
             padding: 0;
         }
@@ -102,14 +101,28 @@
             margin-bottom: 0;
         }
 
+        :root {
+            --font-color: #808080;
+        }
+
         .date-heading {
             font-size: 8pt;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 4pt;
+            font-weight: bold;
+            color: var(--font-color);
+            margin-bottom: 6pt;
             flex-shrink: 0;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 1pt;
+            border-bottom: 1px solid var(--font-color);
+            padding-bottom: 4pt;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .rating {
+            font-size: 7pt;
+            font-weight: normal;
+            color: var(--font-color);
+            flex-shrink: 0;
         }
 
         .write-space {
