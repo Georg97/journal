@@ -179,6 +179,31 @@
         .entry .write-space {
             min-height: 14mm;
         }
+
+        .summary-section {
+            display: flex;
+            flex-direction: row;
+            gap: 8mm;
+            margin-top: 2mm;
+            font-size: 6pt;
+            color: #999;
+        }
+
+        .summary-row {
+            display: flex;
+            gap: 2mm;
+            align-items: center;
+        }
+
+        .summary-label {
+            font-weight: normal;
+        }
+
+        .summary-value {
+            border-bottom: 0.5px solid #999;
+            width: 10mm;
+            text-align: right;
+        }
     </style>
 </head>
 <body>
@@ -210,6 +235,16 @@
                 <div class="date-heading">Finanzen<span class="rating">/10</span></div>
                 <div class="write-space lines"></div>
             </div>
+            <div class="summary-section">
+                <div class="summary-row">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-value">/60</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Rating</span>
+                    <span class="summary-value">= /10</span>
+                </div>
+            </div>
         </div>
 
         <!-- Top-Right A5 Page -->
@@ -237,6 +272,16 @@
             <div class="entry">
                 <div class="date-heading">Finanzen<span class="rating">/10</span></div>
                 <div class="write-space lines"></div>
+            </div>
+            <div class="summary-section">
+                <div class="summary-row">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-value">/60</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Rating</span>
+                    <span class="summary-value">= /10</span>
+                </div>
             </div>
         </div>
 
@@ -266,6 +311,16 @@
                 <div class="date-heading">Finanzen<span class="rating">/10</span></div>
                 <div class="write-space lines"></div>
             </div>
+            <div class="summary-section">
+                <div class="summary-row">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-value">/60</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Rating</span>
+                    <span class="summary-value">= /10</span>
+                </div>
+            </div>
         </div>
 
         <!-- Bottom-Right A5 Page (Back of Page 2) -->
@@ -293,6 +348,16 @@
             <div class="entry">
                 <div class="date-heading">Finanzen<span class="rating">/10</span></div>
                 <div class="write-space lines"></div>
+            </div>
+            <div class="summary-section">
+                <div class="summary-row">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-value">/60</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Rating</span>
+                    <span class="summary-value">= /10</span>
+                </div>
             </div>
         </div>
     </div>
