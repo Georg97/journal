@@ -120,9 +120,17 @@ export const A5FrontCover: React.FC = () => {
 interface A5TitleJournalPageProps {
   date?: Date;
   locale?: string;
+  customCategories?: string[];
 }
 
-export const A5TitleJournalPage: React.FC<A5TitleJournalPageProps> = ({ date, locale = 'de-DE' }) => {
+export const A5TitleJournalPage: React.FC<A5TitleJournalPageProps> = ({
+  date,
+  locale = 'de-DE',
+  customCategories
+}) => {
+  const categoriesToUse = customCategories && customCategories.length > 0 ? customCategories : categories;
+  const totalPoints = categoriesToUse.length * 10;
+
   const formatDate = (date: Date): string => {
     const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
     const dateStr = date.toLocaleDateString(locale, {
@@ -135,14 +143,23 @@ export const A5TitleJournalPage: React.FC<A5TitleJournalPageProps> = ({ date, lo
 
   return (
     <div className="w-[105mm] h-[148.5mm] p-[12mm_10mm] flex flex-col bg-white">
-      {categories.map((category, index) => (
+      {categoriesToUse.map((category, index) => (
         <JournalEntry
           key={index}
           category={category}
           date={index === 0 && date ? formatDate(date) : undefined}
         />
       ))}
-      <SummarySection />
+      <div className="flex flex-row gap-[8mm] mt-[2mm] text-[6pt] text-gray-400">
+        <div className="flex gap-[2mm] items-center">
+          <span className="font-normal">Total</span>
+          <span className="border-b-[0.5px] border-gray-400 w-[10mm] text-right">/{totalPoints}</span>
+        </div>
+        <div className="flex gap-[2mm] items-center">
+          <span className="font-normal">Rating</span>
+          <span className="border-b-[0.5px] border-gray-400 w-[10mm] text-right">= /10</span>
+        </div>
+      </div>
     </div>
   );
 };

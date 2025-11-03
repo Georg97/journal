@@ -20,6 +20,15 @@ export default function JournalPageRoute() {
   const [endDate, setEndDate] = useState<string>('');
   const [locale, setLocale] = useState<string>('de-DE');
   const [useDateRange, setUseDateRange] = useState<boolean>(true);
+  const [customCategories, setCustomCategories] = useState<string[]>([
+    'Ernährung & Gewicht',
+    'Fitness & Physis',
+    'Sozial- und Beziehungsleben',
+    'Kreative Entfaltung, Kunst, Musik & Projekte',
+    'Sauberkeit & Ordnung',
+    'Finanzen',
+  ]);
+  const [showCategoryEditor, setShowCategoryEditor] = useState<boolean>(false);
 
   // Calculate total A5 pages (days)
   const calculateTotalA5Pages = () => {
@@ -113,6 +122,60 @@ export default function JournalPageRoute() {
             🖨️ Print / Save as PDF
           </button>
         </div>
+
+        <hr className="border-gray-600 my-6" />
+
+        {/* Category Editor Toggle */}
+        <div className="mb-6">
+          <button
+            onClick={() => setShowCategoryEditor(!showCategoryEditor)}
+            className="w-full px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 flex items-center justify-between"
+          >
+            <span>✏️ Edit Categories ({customCategories.length})</span>
+            <span>{showCategoryEditor ? '▼' : '▶'}</span>
+          </button>
+        </div>
+
+        {showCategoryEditor && (
+          <div className="mb-6 space-y-2 bg-gray-700 p-4 rounded">
+            <div className="text-sm font-medium mb-2">Categories (Max 10)</div>
+            {customCategories.map((category, index) => (
+              <div key={index} className="flex gap-2">
+                <input
+                  type="text"
+                  value={category}
+                  onChange={(e) => {
+                    const newCategories = [...customCategories];
+                    newCategories[index] = e.target.value;
+                    setCustomCategories(newCategories);
+                  }}
+                  className="flex-1 px-2 py-1 bg-gray-600 border border-gray-500 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                  placeholder={`Category ${index + 1}`}
+                />
+                <button
+                  onClick={() => {
+                    const newCategories = customCategories.filter((_, i) => i !== index);
+                    setCustomCategories(newCategories);
+                  }}
+                  className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+            {customCategories.length < 10 && (
+              <button
+                onClick={() => setCustomCategories([...customCategories, ''])}
+                className="w-full px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
+              >
+                + Add Category
+              </button>
+            )}
+            <div className="text-xs text-gray-400 mt-2">
+              Total: /{customCategories.length * 10}
+            </div>
+          </div>
+        )}
 
         <hr className="border-gray-600 my-6" />
 
@@ -324,7 +387,11 @@ export default function JournalPageRoute() {
             {/* Bottom-Left: First Journal Page (only if we have at least 1 day) */}
             <div className="border-r-2 border-dashed border-gray-500 print:border-none">
               {titleA5Dates[0] ? (
-                <A5TitleJournalPage date={titleA5Dates[0]} locale={locale} />
+                <A5TitleJournalPage
+                  date={titleA5Dates[0]}
+                  locale={locale}
+                  customCategories={customCategories}
+                />
               ) : (
                 <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
               )}
@@ -332,7 +399,11 @@ export default function JournalPageRoute() {
             {/* Bottom-Right: Second Journal Page (only if we have at least 2 days) */}
             <div className="print:border-none">
               {titleA5Dates[1] ? (
-                <A5TitleJournalPage date={titleA5Dates[1]} locale={locale} />
+                <A5TitleJournalPage
+                  date={titleA5Dates[1]}
+                  locale={locale}
+                  customCategories={customCategories}
+                />
               ) : (
                 <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
               )}
@@ -349,7 +420,11 @@ export default function JournalPageRoute() {
             {/* Top-Left A5 */}
             <div className="border-r-2 border-b-2 border-dashed border-gray-500 print:border-none">
               {a4Sheet[0] ? (
-                <A5JournalPage date={a4Sheet[0]} locale={locale} />
+                <A5JournalPage
+                  date={a4Sheet[0]}
+                  locale={locale}
+                  customCategories={customCategories}
+                />
               ) : (
                 <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
               )}
@@ -357,7 +432,11 @@ export default function JournalPageRoute() {
             {/* Top-Right A5 */}
             <div className="border-b-2 border-dashed border-gray-500 print:border-none">
               {a4Sheet[1] ? (
-                <A5JournalPage date={a4Sheet[1]} locale={locale} />
+                <A5JournalPage
+                  date={a4Sheet[1]}
+                  locale={locale}
+                  customCategories={customCategories}
+                />
               ) : (
                 <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
               )}
@@ -365,7 +444,11 @@ export default function JournalPageRoute() {
             {/* Bottom-Left A5 */}
             <div className="border-r-2 border-dashed border-gray-500 print:border-none">
               {a4Sheet[2] ? (
-                <A5JournalPage date={a4Sheet[2]} locale={locale} />
+                <A5JournalPage
+                  date={a4Sheet[2]}
+                  locale={locale}
+                  customCategories={customCategories}
+                />
               ) : (
                 <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
               )}
@@ -373,7 +456,11 @@ export default function JournalPageRoute() {
             {/* Bottom-Right A5 */}
             <div className="print:border-none">
               {a4Sheet[3] ? (
-                <A5JournalPage date={a4Sheet[3]} locale={locale} />
+                <A5JournalPage
+                  date={a4Sheet[3]}
+                  locale={locale}
+                  customCategories={customCategories}
+                />
               ) : (
                 <div className="w-[105mm] h-[148.5mm] bg-gray-50"></div>
               )}
