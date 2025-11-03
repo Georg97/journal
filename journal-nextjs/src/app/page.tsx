@@ -51,24 +51,6 @@ export default function HomePage() {
           🚀 Start Now
         </Link>
 
-        {/* Secondary CTAs */}
-        <div className="mb-8 text-center">
-          <p className="text-gray-400 mb-6">Or explore specific sections:</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/journal"
-              className="px-8 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition-colors"
-            >
-              → Generate Full Journal
-            </Link>
-            <Link
-              href="/title"
-              className="px-8 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition-colors"
-            >
-              → View Title Page
-            </Link>
-          </div>
-        </div>
       </div>
 
       {/* Footer */}
