@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '~/components/LanguageSwitcher';
 
+export const dynamic = 'force-dynamic';
+
 export default function HomePage() {
   const { t } = useTranslation();
   const [isClient, setIsClient] = useState(false);

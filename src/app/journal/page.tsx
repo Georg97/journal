@@ -7,6 +7,8 @@ import { A5JournalPage } from '~/components/A5JournalPage';
 import { A5BackCover, A5FrontCover, A5TitleJournalPage } from '~/components/A5TitlePages';
 import { LanguageSwitcher } from '~/components/LanguageSwitcher';
 
+export const dynamic = 'force-dynamic';
+
 export default function JournalPageRoute() {
   const { i18n, t, ready } = useTranslation();
   const [isClient, setIsClient] = useState(false);
@@ -16,9 +18,9 @@ export default function JournalPageRoute() {
   }, []);
 
   // Get today's date in YYYY-MM-DD format
-  const getTodayString = () => {
+  const getTodayString = (): string => {
     const today = new Date();
-    return today.toISOString().split('T')[0];
+    return today.toISOString().split('T')[0] || '';
   };
 
   // Default fallback categories
@@ -35,8 +37,8 @@ export default function JournalPageRoute() {
   const getDefaultCategories = (): string[] => {
     try {
       const cats = t('journal.defaultCategories', { returnObjects: true });
-      if (Array.isArray(cats) && cats.length > 0) {
-        return cats;
+      if (Array.isArray(cats) && cats.length > 0 && cats.every((cat) => typeof cat === 'string')) {
+        return cats as string[];
       }
       return defaultFallbackCategories;
     } catch {
