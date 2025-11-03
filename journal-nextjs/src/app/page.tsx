@@ -7,6 +7,8 @@ import { JournalPage } from '~/components/JournalPage';
 
 export default function HomePage() {
   const [view, setView] = useState<'home' | 'title' | 'journal'>('home');
+  const [numPages, setNumPages] = useState<number>(5);
+  const [inputValue, setInputValue] = useState<string>('5');
 
   if (view === 'title') {
     return (
@@ -48,10 +50,47 @@ export default function HomePage() {
           >
             Print / Save as PDF
           </button>
+          <div className="flex items-center gap-2 ml-4">
+            <label className="text-gray-800 font-medium">Journal Pages:</label>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onBlur={() => {
+                const value = parseInt(inputValue);
+                if (!isNaN(value) && value >= 1 && value <= 100) {
+                  setNumPages(value);
+                } else {
+                  setInputValue(numPages.toString());
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  const value = parseInt(inputValue);
+                  if (!isNaN(value) && value >= 1 && value <= 100) {
+                    setNumPages(value);
+                  } else {
+                    setInputValue(numPages.toString());
+                  }
+                }
+              }}
+              className="w-20 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <span className="text-gray-600 text-sm">(Title + {numPages} page{numPages !== 1 ? 's' : ''})</span>
+          </div>
         </div>
+        {/* Title page first */}
         <div className="page-container">
-          <JournalPage />
+          <TitlePage />
         </div>
+        {/* Then all journal pages */}
+        {Array.from({ length: numPages }).map((_, index) => (
+          <div key={index} className="page-container">
+            <JournalPage />
+          </div>
+        ))}
       </main>
     );
   }
