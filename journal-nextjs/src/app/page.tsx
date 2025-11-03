@@ -52,9 +52,6 @@ export default function HomePage() {
         <div className="page-container">
           <JournalPage />
         </div>
-        <div className="page-container">
-          <JournalPage />
-        </div>
       </main>
     );
   }
