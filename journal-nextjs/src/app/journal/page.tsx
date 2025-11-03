@@ -14,7 +14,7 @@ export default function JournalPageRoute() {
 
   const [numPages, setNumPages] = useState<number>(5);
   const [inputValue, setInputValue] = useState<string>('5');
-  const [inputMode, setInputMode] = useState<'pages' | 'days'>('days');
+  const inputMode = 'days';
   const [daysInput, setDaysInput] = useState<string>('22');
   const [startDate, setStartDate] = useState<string>(getTodayString());
   const [endDate, setEndDate] = useState<string>('');
@@ -265,78 +265,27 @@ export default function JournalPageRoute() {
           </div>
         ) : (
           <div className="space-y-4">
-            {/* Mode Toggle */}
             <div>
-              <label className="block text-sm font-medium mb-2">Input Mode</label>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setInputMode('pages')}
-                  className={`flex-1 px-4 py-2 rounded font-medium transition-colors ${
-                    inputMode === 'pages'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
-                >
-                  Pages
-                </button>
-                <button
-                  onClick={() => setInputMode('days')}
-                  className={`flex-1 px-4 py-2 rounded font-medium transition-colors ${
-                    inputMode === 'days'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
-                >
-                  Days
-                </button>
-              </div>
-            </div>
-
-            {inputMode === 'pages' ? (
-              <div>
-                <label className="block text-sm font-medium mb-2">Number of Pages</label>
-                <input
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onBlur={() => {
-                    const value = parseInt(inputValue);
-                    if (!isNaN(value) && value >= 0 && value <= 100) {
-                      setNumPages(value);
-                      setDaysInput(calculateDays(value).toString());
-                    } else {
-                      setInputValue(numPages.toString());
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      const value = parseInt(inputValue);
-                      if (!isNaN(value) && value >= 0 && value <= 100) {
-                        setNumPages(value);
-                        setDaysInput(calculateDays(value).toString());
-                      } else {
-                        setInputValue(numPages.toString());
-                      }
-                    }
-                  }}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-                />
-                <div className="mt-2 text-sm text-gray-300">
-                  = {calculateDays(numPages)} days
-                </div>
-              </div>
-            ) : (
-              <div>
-                <label className="block text-sm font-medium mb-2">Number of Days</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="402"
-                  value={daysInput}
-                  onChange={(e) => setDaysInput(e.target.value)}
-                  onBlur={() => {
+              <label className="block text-sm font-medium mb-2">Number of Days</label>
+              <input
+                type="number"
+                min="1"
+                max="402"
+                value={daysInput}
+                onChange={(e) => setDaysInput(e.target.value)}
+                onBlur={() => {
+                  const value = parseInt(daysInput);
+                  if (!isNaN(value) && value >= 1 && value <= 402) {
+                    const pages = calculatePages(value);
+                    setNumPages(pages);
+                    setInputValue(pages.toString());
+                    setDaysInput(value.toString());
+                  } else {
+                    setDaysInput(calculateDaysFromPages(numPages).toString());
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
                     const value = parseInt(daysInput);
                     if (!isNaN(value) && value >= 1 && value <= 402) {
                       const pages = calculatePages(value);
@@ -344,29 +293,16 @@ export default function JournalPageRoute() {
                       setInputValue(pages.toString());
                       setDaysInput(value.toString());
                     } else {
-                      setDaysInput(calculateDays(numPages).toString());
+                      setDaysInput(calculateDaysFromPages(numPages).toString());
                     }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      const value = parseInt(daysInput);
-                      if (!isNaN(value) && value >= 1 && value <= 402) {
-                        const pages = calculatePages(value);
-                        setNumPages(pages);
-                        setInputValue(pages.toString());
-                        setDaysInput(value.toString());
-                      } else {
-                        setDaysInput(calculateDays(numPages).toString());
-                      }
-                    }
-                  }}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-                />
-                <div className="mt-2 text-sm text-gray-300">
-                  = {numPages} page{numPages !== 1 ? 's' : ''}
-                </div>
+                  }
+                }}
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+              />
+              <div className="mt-2 text-sm text-gray-300">
+                = {numPages} page{numPages !== 1 ? 's' : ''}
               </div>
-            )}
+            </div>
           </div>
         )}
       </div>
